@@ -17,6 +17,7 @@ use Hubleto\App\External\WaiBlue\HlthcrCore\Models\Traits\StaysInOwnWorkflow;
 use Hubleto\Framework\Db\Column\Integer;
 use Hubleto\Framework\Db\Column\Lookup;
 use Hubleto\Framework\Db\Column\Varchar;
+use Hubleto\Framework\Exceptions\RecordSaveException;
 
 /**
  * Work document of a client, of one of its branches or of an audit (legacy "Dokumenty").
@@ -151,7 +152,9 @@ class Document extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrMod
   {
     $record = parent::onBeforeCreate($record);
     $record = $this->emptyDatesAsNull($record);
-    $record['id_author'] = $this->authProvider()->getUserId();
+    // None when the document is created on the command line (demo data).
+    $idUser = (int) $this->authProvider()->getUserId();
+    $record['id_author'] = $idUser > 0 ? $idUser : null;
     $record = $this->keepStoredFile($record, 'file', null);
 
     return $this->setOwnersFromAuditAndBranch($record);
@@ -214,19 +217,28 @@ class Document extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrMod
   }
 
   // An audit document belongs to the audit's branch, a branch document to the branch's client.
+  // An empty branch or client is filled in; one that does not match is refused, not replaced.
   private function setOwnersFromAuditAndBranch(array $record): array
   {
     $idAudit = (int) ($record['id_audit'] ?? 0);
-    if ($idAudit > 0) {
-      $audit = $this->getModel(Audit::class)->record->where('id', $idAudit)->first();
-      if ($audit) $record['id_branch'] = $audit->id_branch;
+    $audit = $this->getModel(Audit::class)->record->where('id', $idAudit)->first();
+    if ($audit) {
+      $idSubmittedBranch = (int) ($record['id_branch'] ?? 0);
+      if ($idSubmittedBranch > 0 && $idSubmittedBranch != (int) $audit->id_branch) {
+        throw new RecordSaveException($this->translate('The audit is not one of the chosen branch.'));
+      }
+      $record['id_branch'] = $audit->id_branch;
     }
 
     $idBranch = (int) ($record['id_branch'] ?? 0);
-    if ($idBranch <= 0) return $record;
-
     $branch = $this->getModel(Branch::class)->record->where('id', $idBranch)->first();
-    if ($branch) $record['id_customer'] = $branch->id_customer;
+    if ($branch) {
+      $idSubmittedCustomer = (int) ($record['id_customer'] ?? 0);
+      if ($idSubmittedCustomer > 0 && $idSubmittedCustomer != (int) $branch->id_customer) {
+        throw new RecordSaveException($this->translate('The branch is not one of the chosen client.'));
+      }
+      $record['id_customer'] = $branch->id_customer;
+    }
 
     return $record;
   }

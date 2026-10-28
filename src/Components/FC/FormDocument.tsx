@@ -21,9 +21,10 @@ const InputBranchOfSelectedClient = () => {
   />;
 }
 
-// The audit dropdown offers only audits of the selected branch.
+// The audit dropdown offers only audits of the selected branch, so it is shown once a branch is chosen.
 const InputAuditOfSelectedBranch = () => {
-  const idBranch = useRecordField('id_branch', 0);
+  const idBranch = Number(useRecordField('id_branch', 0));
+  if (idBranch <= 0) return null;
   return <Input
     key={'audit-of-branch-' + idBranch}
     field='id_audit'
