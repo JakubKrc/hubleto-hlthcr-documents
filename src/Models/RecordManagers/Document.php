@@ -99,15 +99,19 @@ class Document extends \Hubleto\Erp\RecordManager
     $hubleto = \Hubleto\Erp\Loader::getGlobalApp();
     $router = $hubleto->router();
 
-    // Customer form tab: all documents of the client, including its branches' documents.
+    // The client and branch tabs list only the documents linked to them directly (both legacy apps);
+    // a branch document shows in the branch tab, an audit document in the audit tab.
     $idCustomer = $router->urlParamAsInteger('idCustomer');
     if ($idCustomer > 0) {
       $query = $query->where($this->table . '.id_customer', $idCustomer);
+      $query = $query->whereRaw('coalesce(' . $this->table . '.id_branch, 0) = 0');
+      $query = $query->whereRaw('coalesce(' . $this->table . '.id_audit, 0) = 0');
     }
 
     $idBranch = $router->urlParamAsInteger('idBranch');
     if ($idBranch > 0) {
       $query = $query->where($this->table . '.id_branch', $idBranch);
+      $query = $query->whereRaw('coalesce(' . $this->table . '.id_audit, 0) = 0');
     }
 
     // Audit form tab "Dokumenty".

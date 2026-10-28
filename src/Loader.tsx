@@ -8,7 +8,7 @@ import TableDocuments from './Components/FC/TableDocuments'
 const parentApp = 'Hubleto/App/External/WaiBlue/HlthcrDocuments';
 const T = new Translator(parentApp + '/Loader', 'Loader');
 
-// "Dokumenty" tab in the customer form: documents of the client and of its branches.
+// "Dokumenty" tab in the customer form: documents of the whole client (not of a branch or an audit).
 function mountCustomerDocumentsTab() {
   return {
     title: T.translate('Documents'),
@@ -19,7 +19,8 @@ function mountCustomerDocumentsTab() {
   };
 }
 
-// "Dokumenty" tab in the branch form (HlthcrBranches); new documents get the branch and its client.
+// "Dokumenty" tab in the branch form (HlthcrBranches): documents of the branch, not of its audits.
+// New documents get the branch and its client.
 function mountBranchDocumentsTab() {
   return {
     title: T.translate('Documents'),
