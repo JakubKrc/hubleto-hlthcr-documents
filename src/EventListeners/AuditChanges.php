@@ -2,6 +2,7 @@
 
 namespace Hubleto\App\External\WaiBlue\HlthcrDocuments\EventListeners;
 
+use Hubleto\App\External\WaiBlue\HlthcrCore\Services\ProtectedFile;
 use Hubleto\App\External\WaiBlue\HlthcrAudits\Models\Audit;
 use Hubleto\App\External\WaiBlue\HlthcrDocuments\Models\Document;
 use Hubleto\Framework\Interfaces\ModelInterface;
@@ -28,11 +29,10 @@ class AuditChanges extends \Hubleto\Framework\EventListener implements \Hubleto\
   {
     if (!($model instanceof Audit)) return;
 
-    $uploadFolder = $this->config()->getAsString('uploadFolder');
+    /** @var ProtectedFile */
+    $protectedFile = $this->getService(ProtectedFile::class);
     foreach ($this->filesByAudit[$id] ?? [] as $file) {
-      if ((string) $file == '') continue;
-      $filePath = $uploadFolder . '/' . $file;
-      if (is_file($filePath)) unlink($filePath);
+      $protectedFile->delete((string) $file);
     }
     unset($this->filesByAudit[$id]);
   }

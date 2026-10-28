@@ -2,6 +2,7 @@
 
 namespace Hubleto\App\External\WaiBlue\HlthcrDocuments\Models;
 
+use Hubleto\App\External\WaiBlue\HlthcrCore\Services\ProtectedFile;
 use Hubleto\App\External\WaiBlue\HlthcrCore\Models\Traits\EmptyDatesAsNull;
 use Hubleto\App\Community\Auth\Models\User;
 use Hubleto\App\Community\Customers\Models\Customer;
@@ -210,8 +211,7 @@ class Document extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrMod
     $id = parent::onAfterDelete($id);
     if ($this->fileOfDeletedDocument == '') return $id;
 
-    $filePath = $this->config()->getAsString('uploadFolder') . '/' . $this->fileOfDeletedDocument;
-    if (is_file($filePath)) unlink($filePath);
+    $this->getService(ProtectedFile::class)->delete($this->fileOfDeletedDocument);
     $this->fileOfDeletedDocument = '';
 
     return $id;
