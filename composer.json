@@ -1,6 +1,6 @@
 {
     "name": "wai-blue/hubleto-hlthcr-documents",
-    "license": "MIT",
+    "license": "proprietary",
     "description": "Hlthcr for Hubleto: Working documents of clients, branches and audits with workflow states, priority and protected download",
     "require": {
         "wai-blue/hubleto-hlthcr-core": "dev-main",
