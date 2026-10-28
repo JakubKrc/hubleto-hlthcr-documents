@@ -1,0 +1,59 @@
+{
+    "manifest": {
+        "Work documents": "Pracovné dokumenty",
+        "Waiting for information": "Čakáme na informácie",
+        "In progress": "Rozpracovaný",
+        "Invoiced": "Vyfakturovaný",
+        "Work documents of clients, branches and audits with state, priority, protected download and calendar.": "Pracovné dokumenty klientov, prevádzok a auditov so stavom, prioritou, chráneným sťahovaním a kalendárom.",
+        "Done": "Hotový",
+        "Sent to the client": "Odoslaný klientovi",
+        "Settings": "Nastavenia",
+        "Waiting for processing": "Čaká na spracovanie",
+        "Returned with comments": "Pripomienkovaný"
+    },
+    "Models\\Document": {
+        "Document name": "Názov dokumentu",
+        "Client": "Klient",
+        "Branch": "Prevádzka",
+        "Leave empty for a document of the whole client.": "Nechajte prázdne pre dokument celého klienta.",
+        "Created on": "Dátum vytvorenia",
+        "Document": "Dokument",
+        "Priority": "Priorita dokumentu",
+        "Created by": "Vytvoril",
+        "Workflow": "Workflow",
+        "State": "Stav",
+        "Add document": "Pridať dokument",
+        "All": "Všetky",
+        "Audit": "Audit",
+        "Only for a document of an audit.": "Iba pre dokument auditu."
+    },
+    "Controllers\\Home": {
+        "Work documents": "Pracovné dokumenty",
+        "Settings": "Nastavenia"
+    },
+    "Controllers\\DownloadDocument": {
+        "The document does not exist.": "Dokument neexistuje.",
+        "No file is uploaded.": "Súbor nie je vložený."
+    },
+    "Calendar": {
+        "Work documents": "Pracovné dokumenty",
+        "Document - {{ name }}": "Dokument - {{ name }}"
+    },
+    "Components\\FormDocument": {
+        "Work document": "Pracovný dokument",
+        "Open document": "Zobraziť dokument",
+        "No file is uploaded.": "Súbor nie je vložený."
+    },
+    "Loader": {
+        "Documents": "Dokumenty",
+        "Save the client first.": "Najprv uložte klienta.",
+        "Save the branch first.": "Najprv uložte prevádzku.",
+        "Save the audit first.": "Najprv uložte audit."
+    },
+    "Controllers\\Settings": {
+        "Work documents": "Pracovné dokumenty",
+        "Settings": "Nastavenia",
+        "The states of work documents are a Hubleto workflow. You can rename them or add your own states.": "Stavy pracovných dokumentov sú workflow v Hubleto. Môžete ich premenovať alebo pridať vlastné.",
+        "Document states": "Stavy dokumentov"
+    }
+}
