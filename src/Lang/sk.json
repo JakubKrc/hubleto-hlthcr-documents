@@ -25,7 +25,8 @@
         "Add document": "Pridať dokument",
         "All": "Všetky",
         "Audit": "Audit",
-        "Only for a document of an audit.": "Iba pre dokument auditu."
+        "Only for a document of an audit.": "Iba pre dokument auditu.",
+        "Choose a state of this record's own workflow.": "Vyberte stav z vlastného workflow tohto záznamu."
     },
     "Controllers\\Home": {
         "Work documents": "Pracovné dokumenty",

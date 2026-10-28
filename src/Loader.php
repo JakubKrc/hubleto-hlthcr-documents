@@ -37,7 +37,10 @@ class Loader extends \Hubleto\App\External\WaiBlue\HlthcrCore\HlthcrApp
     $calendarManager = $this->getService(\Hubleto\App\Community\Calendar\Manager::class);
     $calendarManager->addCalendar($this, 'hlthcr-documents', Calendar::class);
 
-    $this->eventManager()->addEventListener('onModelBeforeDelete', $this->getService(EventListeners\AuditChanges::class));
+    // One listener object for both events: it keeps the files between them.
+    $auditChanges = $this->getService(EventListeners\AuditChanges::class);
+    $this->eventManager()->addEventListener('onModelBeforeDelete', $auditChanges);
+    $this->eventManager()->addEventListener('onModelAfterDelete', $auditChanges);
 
     /** @var \Hubleto\App\Community\Workflow\Manager $workflowManager */
     $workflowManager = $this->getService(\Hubleto\App\Community\Workflow\Manager::class);

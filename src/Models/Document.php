@@ -13,6 +13,7 @@ use Hubleto\App\External\WaiBlue\HlthcrCore\Controllers\Api\CustomerLookup;
 use Hubleto\Framework\Db\Column\Date;
 use Hubleto\App\External\WaiBlue\HlthcrCore\Db\Column\StoredFile;
 use Hubleto\App\External\WaiBlue\HlthcrCore\Models\Traits\KeepsStoredFiles;
+use Hubleto\App\External\WaiBlue\HlthcrCore\Models\Traits\StaysInOwnWorkflow;
 use Hubleto\Framework\Db\Column\Integer;
 use Hubleto\Framework\Db\Column\Lookup;
 use Hubleto\Framework\Db\Column\Varchar;
@@ -25,6 +26,7 @@ class Document extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrMod
 {
   use KeepsStoredFiles;
   use EmptyDatesAsNull;
+  use StaysInOwnWorkflow;
 
   const WORKFLOW_GROUP = 'hlthcr_documents';
 
@@ -54,13 +56,13 @@ class Document extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrMod
   {
     return array_merge(parent::describeColumns(), [
       'name' => (new Varchar($this, $this->translate('Document name')))->setRequired()->setDefaultVisible(),
-      'id_customer' => (new Lookup($this, $this->translate('Client'), Customer::class, 'CASCADE'))
+      'id_customer' => (new Lookup($this, $this->translate('Client'), Customer::class, 'RESTRICT'))
         ->setRequired()
         ->setDefaultVisible()
         // Only clients visible to the user (the community lookup is not scoped).
         ->setEndpoint(CustomerLookup::ENDPOINT)
       ,
-      'id_branch' => (new Lookup($this, $this->translate('Branch'), Branch::class, 'CASCADE'))
+      'id_branch' => (new Lookup($this, $this->translate('Branch'), Branch::class, 'RESTRICT'))
         ->setDefaultVisible()
         ->setHint($this->translate('Leave empty for a document of the whole client.'))
       ,
@@ -159,6 +161,7 @@ class Document extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrMod
   {
     $record = parent::onBeforeUpdate($record);
     $record = $this->emptyDatesAsNull($record);
+    $this->refuseWorkflowOfOtherGroup($record, self::WORKFLOW_GROUP);
 
     // The author stays as when the document was created.
     $originalDocument = $this->record->where('id', (int) $record['id'])->first();
