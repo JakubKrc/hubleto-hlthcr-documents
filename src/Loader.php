@@ -153,7 +153,7 @@ class Loader extends \Hubleto\App\External\WaiBlue\HlthcrCore\HlthcrApp
    * Demo documents of the demo clients (FAKE data, no real files).
    * Records are inserted directly: the model rules use the logged-in user, and there is none on the command line.
    */
-  public function generateDemoData(): void
+  public function generateHlthcrDemoData(): void
   {
     /** @var Models\Document */
     $mDocument = $this->getModel(Models\Document::class);
