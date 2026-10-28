@@ -190,6 +190,7 @@ class Document extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrMod
       'id_workflow' => $savedRecord['id_workflow'] ?? null,
       'id_workflow_step' => $savedRecord['id_workflow_step'] ?? null,
     ]);
+    $this->logFirstWorkflowStep($savedRecord);
 
     // Returned as saved in the database (e.g. the stored file path instead of the uploaded data).
     return $this->record->where('id', $savedRecord['id'])->first()->toArray();
