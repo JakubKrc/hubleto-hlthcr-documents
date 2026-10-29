@@ -1,10 +1,9 @@
+import React from 'react';
 import Translator from '@hubleto/react-ui/core/Translator';
-import Form from '@hubleto/react-ui/components/fc/Form';
+import Form, { FormMetaContext } from '@hubleto/react-ui/components/fc/Form';
 import { type FormProps } from '@hubleto/react-ui/components/fc/FormInterfaces';
 import Input from '@hubleto/react-ui/components/fc/FormComponents/Input';
 import { useRecordField } from '@hubleto/react-ui/components/fc/FormRecordStore';
-// Shared with other Hlthcr apps (relative import: Hubleto has no alias for custom apps).
-// Core is a sibling package (external_apps/ or vendor/wai-blue/).
 
 const componentName = 'FormDocument';
 const parentApp = 'Hubleto/App/External/WaiBlue/HlthcrDocuments';
@@ -31,20 +30,25 @@ const InputAuditOfSelectedBranch = () => {
   />;
 }
 
-const TabDefault = () => <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-  <div>
-    <Input field='name' />
-    <Input field='id_customer' />
-    <InputBranchOfSelectedClient />
-    <InputAuditOfSelectedBranch />
-    <Input field='date_created' />
-    <Input field='file' />
-  </div>
-  <div>
-    <Input field='priority' />
-    <Input field='id_author' />
-  </div>
-</div>;
+// The creation date stays as when the document was created (the server keeps it).
+const TabDefault = () => {
+  const form = React.useContext(FormMetaContext);
+  const isSaved = form.id > 0;
+  return <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+    <div>
+      <Input field='name' />
+      <Input field='id_customer' />
+      <InputBranchOfSelectedClient />
+      <InputAuditOfSelectedBranch />
+      <Input field='date_created' readonly={isSaved} />
+      <Input field='file' />
+    </div>
+    <div>
+      <Input field='priority' />
+      <Input field='id_author' />
+    </div>
+  </div>;
+}
 
 const FormDocument = (props: FormProps) => <Form
   componentName={componentName}

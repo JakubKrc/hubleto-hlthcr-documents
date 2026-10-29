@@ -172,11 +172,12 @@ class Document extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrMod
     // The client, branch and audit are checked together, also when a save sends only some of them.
     $record = $this->addStoredValuesOfMissingColumns($record, ['id_customer', 'id_branch', 'id_audit']);
 
-    // The author stays as when the document was created.
+    // The author and the creation date stay as when the document was created (both legacy apps).
     $originalDocument = $this->record->where('id', (int) $record['id'])->first();
     $record = $this->keepStoredFile($record, 'file', $originalDocument);
     if ($originalDocument) {
       $record['id_author'] = $originalDocument->id_author;
+      $record['date_created'] = $originalDocument->date_created;
     }
 
     return $this->setOwnersFromAuditAndBranch($record);
