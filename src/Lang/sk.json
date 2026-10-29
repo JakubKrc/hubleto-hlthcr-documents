@@ -54,7 +54,7 @@
     "Controllers\\Settings": {
         "Work documents": "Pracovné dokumenty",
         "Settings": "Nastavenia",
-        "The states of work documents are a Hubleto workflow. You can rename them or add your own states.": "Stavy pracovných dokumentov sú workflow v Hubleto. Môžete ich premenovať alebo pridať vlastné.",
-        "Document states": "Stavy dokumentov"
+        "Document states": "Stavy dokumentov",
+        "The states of work documents are a workflow. You can rename them or add your own states.": "Stavy pracovných dokumentov sú workflow. Môžete ich premenovať alebo pridať vlastné."
     }
 }
