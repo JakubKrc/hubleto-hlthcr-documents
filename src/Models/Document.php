@@ -15,6 +15,7 @@ use Hubleto\Framework\Db\Column\Date;
 use Hubleto\App\External\WaiBlue\HlthcrCore\Db\Column\StoredFile;
 use Hubleto\App\External\WaiBlue\HlthcrCore\Models\Traits\KeepsStoredFiles;
 use Hubleto\App\External\WaiBlue\HlthcrCore\Models\Traits\StaysInOwnWorkflow;
+use Hubleto\App\External\WaiBlue\HlthcrCore\Models\Traits\UsesStoredValues;
 use Hubleto\Framework\Db\Column\Integer;
 use Hubleto\Framework\Db\Column\Lookup;
 use Hubleto\Framework\Db\Column\Varchar;
@@ -29,6 +30,7 @@ class Document extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrMod
   use KeepsStoredFiles;
   use EmptyDatesAsNull;
   use StaysInOwnWorkflow;
+  use UsesStoredValues;
 
   const WORKFLOW_GROUP = 'hlthcr_documents';
 
@@ -157,6 +159,7 @@ class Document extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrMod
     $idUser = (int) $this->authProvider()->getUserId();
     $record['id_author'] = $idUser > 0 ? $idUser : null;
     $record = $this->keepStoredFile($record, 'file', null);
+    $record = $this->dropSentWorkflow($record);
 
     return $this->setOwnersFromAuditAndBranch($record);
   }
@@ -166,6 +169,8 @@ class Document extends \Hubleto\App\External\WaiBlue\HlthcrCore\Models\HlthcrMod
     $record = parent::onBeforeUpdate($record);
     $record = $this->emptyDatesAsNull($record);
     $this->refuseWorkflowOfOtherGroup($record, self::WORKFLOW_GROUP);
+    // The client, branch and audit are checked together, also when a save sends only some of them.
+    $record = $this->addStoredValuesOfMissingColumns($record, ['id_customer', 'id_branch', 'id_audit']);
 
     // The author stays as when the document was created.
     $originalDocument = $this->record->where('id', (int) $record['id'])->first();
