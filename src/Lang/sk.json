@@ -43,9 +43,7 @@
         "Document - {{ name }}": "Dokument - {{ name }}"
     },
     "Components\\FormDocument": {
-        "Work document": "Pracovný dokument",
-        "Open document": "Zobraziť dokument",
-        "No file is uploaded.": "Súbor nie je vložený."
+        "Work document": "Pracovný dokument"
     },
     "Loader": {
         "Documents": "Dokumenty",

@@ -5,7 +5,6 @@ import Input from '@hubleto/react-ui/components/fc/FormComponents/Input';
 import { useRecordField } from '@hubleto/react-ui/components/fc/FormRecordStore';
 // Shared with other Hlthcr apps (relative import: Hubleto has no alias for custom apps).
 // Core is a sibling package (external_apps/ or vendor/wai-blue/).
-import FileDownloadButton from '../../../../hubleto-hlthcr-core/src/Components/FC/FileDownloadButton';
 
 const componentName = 'FormDocument';
 const parentApp = 'Hubleto/App/External/WaiBlue/HlthcrDocuments';
@@ -44,13 +43,6 @@ const TabDefault = () => <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
   <div>
     <Input field='priority' />
     <Input field='id_author' />
-    <div className='mt-4'>
-      <FileDownloadButton
-        urlSlug='hlthcr-documents/documents'
-        text={T.translate('Open document')}
-        noFileText={T.translate('No file is uploaded.')}
-      />
-    </div>
   </div>
 </div>;
 
