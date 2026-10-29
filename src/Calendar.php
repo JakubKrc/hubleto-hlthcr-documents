@@ -2,7 +2,7 @@
 
 namespace Hubleto\App\External\WaiBlue\HlthcrDocuments;
 
-use Hubleto\App\External\WaiBlue\HlthcrCore\Services\Roles;
+use Hubleto\App\External\WaiBlue\HlthcrCore\Services\CalendarAuthor;
 
 /**
  * Work documents in the Hubleto calendar, one all-day event on the creation date (as in the legacy calendar).
@@ -43,11 +43,7 @@ class Calendar extends \Hubleto\App\Community\Calendar\Calendar
       ->where('hlthcr_documents.date_created', '<=', $dateEnd)
     ;
 
-    // Legacy calendar: administrators and managers see all document events, others only their own documents.
-    $idAuthor = (int) ($filter['idUser'] ?? 0);
-    $showsOnlyMyEvents = (int) ($filter['fOwnership'] ?? 0) == 1;
-    $canSeeAllDocumentEvents = $this->getService(Roles::class)->isActiveUserAdministratorOrManager();
-    if ($showsOnlyMyEvents || !$canSeeAllDocumentEvents) $idAuthor = $this->authProvider()->getUserId();
+    $idAuthor = $this->getService(CalendarAuthor::class)->getAuthorIdToShow($filter);
     if ($idAuthor > 0) {
       $query = $query->where('hlthcr_documents.id_author', $idAuthor);
     }
