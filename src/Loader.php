@@ -19,6 +19,9 @@ class Loader extends \Hubleto\App\External\WaiBlue\HlthcrCore\HlthcrApp
   const STEP_SENT_TO_CLIENT = 'hlthcr-document-sent-to-client';
   const STEP_INVOICED = 'hlthcr-document-invoiced';
 
+  // A document in these steps is done (the calendar's "done" filter).
+  const DONE_STEP_TAGS = [self::STEP_DONE, self::STEP_SENT_TO_CLIENT, self::STEP_INVOICED];
+
   public function init(): void
   {
     parent::init();

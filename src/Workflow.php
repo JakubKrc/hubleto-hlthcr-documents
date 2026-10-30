@@ -11,12 +11,18 @@ class Workflow extends \Hubleto\App\Community\Workflow\Workflow
   {
     /** @var Models\Document */
     $mDocument = $this->getModel(Models\Document::class);
-    $documents = $mDocument->record->prepareReadQuery()
+    $query = $mDocument->record->prepareReadQuery()
       ->where('hlthcr_documents.id_workflow', $idWorkflow)
       ->with(['CUSTOMER'])
-      ->get()
-      ->toArray()
     ;
+
+    // The board's user buttons: documents of that author.
+    $idOwner = (int) ($filters['fOwner'] ?? 0);
+    if ($idOwner > 0) {
+      $query = $query->where('hlthcr_documents.id_author', $idOwner);
+    }
+
+    $documents = $query->get()->toArray();
 
     $items = [];
     foreach ($documents as $document) {

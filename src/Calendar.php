@@ -2,6 +2,7 @@
 
 namespace Hubleto\App\External\WaiBlue\HlthcrDocuments;
 
+use Hubleto\App\Community\Workflow\Models\WorkflowStep;
 use Hubleto\App\External\WaiBlue\HlthcrCore\Services\CalendarAuthor;
 
 /**
@@ -48,10 +49,27 @@ class Calendar extends \Hubleto\App\Community\Calendar\Calendar
       $query = $query->where('hlthcr_documents.id_author', $idAuthor);
     }
 
+    $doneStepIds = $this->getModel(WorkflowStep::class)->record
+      ->whereIn('tag', Loader::DONE_STEP_TAGS)
+      ->pluck('id')
+      ->toArray()
+    ;
+
+    // Hubleto's calendar filter "not done" is 1, "done" is 2.
+    $completedFilter = (int) ($filter['fCompleted'] ?? 0);
+    if ($completedFilter == 1) {
+      $query = $query->where(function ($notDoneQuery) use ($doneStepIds) {
+        $notDoneQuery->whereNotIn('hlthcr_documents.id_workflow_step', $doneStepIds)
+          ->orWhereNull('hlthcr_documents.id_workflow_step');
+      });
+    }
+    if ($completedFilter == 2) $query = $query->whereIn('hlthcr_documents.id_workflow_step', $doneStepIds);
+
     $documents = $query->get();
 
     $events = [];
     foreach ($documents as $document) {
+      $isDone = in_array((int) $document->id_workflow_step, $doneStepIds);
       $events[] = [
         'id' => (int) $document->id,
         'start' => $document->date_created,
@@ -60,6 +78,7 @@ class Calendar extends \Hubleto\App\Community\Calendar\Calendar
         'color' => self::COLOR,
         'source' => 'hlthcr-documents',
         'id_owner' => $document->id_author,
+        'completed' => $isDone ? 1 : 0,
         'url' => 'hlthcr-documents/documents/' . $document->id,
       ];
     }
